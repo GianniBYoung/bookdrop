@@ -1,11 +1,14 @@
 module bookdrop
 
-go 1.22.0
+go 1.22
+
+toolchain go1.22.0
 
 require (
-	github.com/GianniBYoung/configa v0.0.0-20240104040253-104e26857b07
+	github.com/charmbracelet/huh v0.3.0
 	github.com/charmbracelet/log v0.3.1
 	github.com/resend/resend-go/v2 v2.5.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -14,7 +17,6 @@ require (
 	github.com/catppuccin/go v0.2.0 // indirect
 	github.com/charmbracelet/bubbles v0.18.0 // indirect
 	github.com/charmbracelet/bubbletea v0.25.0 // indirect
-	github.com/charmbracelet/huh v0.3.0 // indirect
 	github.com/charmbracelet/lipgloss v0.9.1 // indirect
 	github.com/containerd/console v1.0.4 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
@@ -32,5 +34,4 @@ require (
 	golang.org/x/sys v0.17.0 // indirect
 	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/GianniBYoung/configa"
+	"bookdrop/configa"
 	"github.com/charmbracelet/log"
 	"github.com/resend/resend-go/v2"
 )
@@ -17,7 +17,7 @@ type Config struct {
 }
 
 func main() {
-	configa.MainConfiga()
+	configa.Configure()
 	ctx := context.TODO()
 	apiKey := os.Getenv("RESEND_API_KEY")
 
