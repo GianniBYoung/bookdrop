@@ -20,9 +20,11 @@ func main() {
 
 	ctx := context.TODO()
 	args := os.Args
-	apiKey := os.Getenv("RESEND_API_KEY")
 
-	if apiKey == "" {
+	log.Debugf("Unmarshalled yaml config:\n%+v\n", configa.Config)
+
+	log.Debug(configa.Config.ApiKey)
+	if configa.Config.ApiKey == "" {
 		log.Fatal("Api Key is missing")
 	}
 
@@ -32,7 +34,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client := resend.NewClient(apiKey)
+	client := resend.NewClient(configa.Config.ApiKey)
 
 	// Create attachments objects
 	BookAttachment := &resend.Attachment{

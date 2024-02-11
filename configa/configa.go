@@ -12,12 +12,13 @@ import (
 type Configuration struct {
 	DefaultSender   string `yaml:"defaultSender"`
 	DefaultReciever string `yaml:"defaultReciever"`
-	Apikey          string `yaml:"apikey"`
+	ApiKey          string `yaml:"apiKey,omitempty"`
 	DebugMode       bool   `yaml:"debugMode"`
 }
 
 var Config Configuration
 var ConfigPath string
+var envApiKey string
 
 func SurveyUser() {
 	form := huh.NewForm(
@@ -90,6 +91,10 @@ func readConfig() {
 		log.Fatal("", err, "Error unmarshalling config")
 	}
 
+	if envApiKey != "" {
+		Config.ApiKey = envApiKey
+	}
+
 	log.Debug("%+v\n", Config)
 }
 
@@ -99,6 +104,8 @@ func Configure() {
 
 	getConfigPath()
 
+	envApiKey = os.Getenv("RESEND_API_KEY")
+	Config.ApiKey = envApiKey
 	if _, err := os.Stat(ConfigPath); err != nil {
 		log.Info("Config file not found, generating!")
 		SurveyUser()
@@ -106,6 +113,11 @@ func Configure() {
 		if e != nil {
 			log.Error("", e, "config file error")
 		}
+
+		if envApiKey != "" {
+			Config.ApiKey = envApiKey
+		}
+
 		log.Debug("Config Generated!")
 		log.Debug(Config)
 		return
