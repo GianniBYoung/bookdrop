@@ -5,29 +5,24 @@ import (
 	"os"
 
 	"bookdrop/configa"
+
 	"github.com/charmbracelet/log"
 	"github.com/resend/resend-go/v2"
 )
 
-type Config struct {
-	defaultSender   string `yaml:"defaultSender"`
-	defaultReciever string `yaml:"defaultReciever"`
-	apikey          string `yaml:"apikey"`
-	DebugMode       bool   `yaml:"debugMode"`
-}
-
 func main() {
 	configa.Configure()
+	log.Error(configa.Config)
 	ctx := context.TODO()
+	args := os.Args
 	apiKey := os.Getenv("RESEND_API_KEY")
 
 	if apiKey == "" {
 		log.Fatal("Api Key is missing")
 	}
 
-	// Read attachment file
-	pwd, _ := os.Getwd()
-	f, err := os.ReadFile(pwd + "/aaaa.epub")
+	// pwd, _ := os.Getwd()
+	f, err := os.ReadFile(args[1])
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,6 +1,7 @@
 package configa
 
 import (
+	"errors"
 	"os"
 
 	"github.com/charmbracelet/huh"
@@ -8,30 +9,37 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
-	defaultSender   string `yaml:"defaultSender"`
-	defaultReciever string `yaml:"defaultReciever"`
-	apikey          string `yaml:"apikey"`
+type Configuration struct {
+	DefaultSender   string `yaml:"defaultSender"`
+	DefaultReciever string `yaml:"defaultReciever"`
+	Apikey          string `yaml:"apikey"`
 	DebugMode       bool   `yaml:"debugMode"`
 }
 
-var config Config
+var Config Configuration
 var ConfigPath string
 var ConfigDirPath string
 
 func SurveyUser() {
-	form := huh.NewForm(huh.NewGroup(
-		huh.NewSelect[bool]().Title("Enable debug mode?").Options(
-			huh.NewOption("Yes", true),
-			huh.NewOption("No", false),
-		).Value(&config.DebugMode),
-	),
+	form := huh.NewForm(
 		huh.NewGroup(
-			huh.NewSelect[string]().Title("Who is the sender?").Options(
-				huh.NewOption("us.nelnet.biz", ".us.nelnet.biz"),
-				huh.NewOption("glhec.org", ".glhec.org"),
-				huh.NewOption("nulsc.biz", ".nulsc.biz"),
-			).Value(&config.defaultSender),
+			huh.NewConfirm().Title("Enable debug mode?").Value(&Config.DebugMode),
+			huh.NewInput().Title("Who is the sender?").Value(&Config.DefaultSender).
+				Validate(func(str string) error {
+					// match regex for email
+					if str == "Frank" {
+						return errors.New("Sorry, we don’t serve customers named Frank.")
+					}
+					return nil
+				}),
+			huh.NewInput().Title("What is the device's email?").Value(&Config.DefaultReciever).
+				Validate(func(str string) error {
+					// match regex for email
+					if str == "Frank" {
+						return errors.New("Sorry, we don’t serve customers named Frank.")
+					}
+					return nil
+				}),
 		),
 	)
 	form.Run()
@@ -55,14 +63,14 @@ func GetConfigPath() {
 }
 
 // This function should always generate and overwrite a config.
-func GenerateConfig() error {
-	conf, err := yaml.Marshal(&config)
+func generateConfig() error {
+	Config, err := yaml.Marshal(&Config)
 
 	if err != nil {
 		log.Error("", err, "YAML Marshal Err")
 	}
 
-	err = os.WriteFile(ConfigPath, conf, 0644)
+	err = os.WriteFile(ConfigPath, Config, 0644)
 
 	if err != nil {
 		log.Fatal("", err, "Error Writing Config File to "+ConfigPath)
@@ -72,22 +80,18 @@ func GenerateConfig() error {
 	return nil
 }
 
-func ReadConfig() Config {
+func ReadConfig() {
 	f, err := os.ReadFile(ConfigPath)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var c Config
-
-	if err := yaml.Unmarshal(f, &c); err != nil {
+	if err := yaml.Unmarshal(f, &Config); err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("%+v\n", c)
-
-	return c
+	log.Debug("%+v\n", Config)
 }
 
 func Configure() {
@@ -96,12 +100,11 @@ func Configure() {
 
 	GetConfigPath()
 	SurveyUser()
-	e := GenerateConfig()
+	e := generateConfig()
 
 	if e != nil {
 		log.Error("", e, "config file error")
 	}
 
-	log.Print(config)
-	log.Print("Config Generated!")
+	log.Debug("Config Generated!")
 }
