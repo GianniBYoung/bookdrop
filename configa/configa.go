@@ -18,7 +18,6 @@ type Configuration struct {
 
 var Config Configuration
 var ConfigPath string
-var ConfigDirPath string
 
 func SurveyUser() {
 	form := huh.NewForm(
@@ -45,20 +44,20 @@ func SurveyUser() {
 	form.Run()
 }
 
-func GetConfigPath() {
+func getConfigPath() {
 
-	ConfigDirPath = os.Getenv("XDG_CONFIG_HOME")
+	configDirPath := os.Getenv("XDG_CONFIG_HOME")
 
-	if ConfigDirPath == "" {
+	if configDirPath == "" {
 		homeDir, _ := os.UserHomeDir()
-		ConfigDirPath = homeDir + "/.config"
+		configDirPath = homeDir + "/.config"
 		err := os.MkdirAll(homeDir+".config", 0755)
 		if err != nil {
 			log.Error("Unable to create config path", err, "Path Error:")
 		}
 	}
 
-	ConfigPath = ConfigDirPath + "/bookdrop.yaml"
+	ConfigPath = configDirPath + "/bookdrop.yml"
 
 }
 
@@ -80,15 +79,15 @@ func generateConfig() error {
 	return nil
 }
 
-func ReadConfig() {
+func readConfig() {
 	f, err := os.ReadFile(ConfigPath)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("", err, "Error retrieving config from path")
 	}
 
 	if err := yaml.Unmarshal(f, &Config); err != nil {
-		log.Fatal(err)
+		log.Fatal("", err, "Error unmarshalling config")
 	}
 
 	log.Debug("%+v\n", Config)
@@ -98,13 +97,20 @@ func Configure() {
 	log.SetReportTimestamp(false)
 	log.SetReportCaller(false)
 
-	GetConfigPath()
-	SurveyUser()
-	e := generateConfig()
+	getConfigPath()
 
-	if e != nil {
-		log.Error("", e, "config file error")
+	if _, err := os.Stat(ConfigPath); err != nil {
+		log.Info("Config file not found, generating!")
+		SurveyUser()
+		e := generateConfig()
+		if e != nil {
+			log.Error("", e, "config file error")
+		}
+		log.Debug("Config Generated!")
+		log.Debug(Config)
+		return
 	}
 
-	log.Debug("Config Generated!")
+	readConfig()
+
 }

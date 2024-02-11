@@ -11,8 +11,13 @@ import (
 )
 
 func main() {
+
 	configa.Configure()
-	log.Error(configa.Config)
+	if os.Getenv("BOOKDROP_DEBUG") != "" {
+		log.SetLevel(log.DebugLevel)
+		log.Debug("Debug Enabled!")
+	}
+
 	ctx := context.TODO()
 	args := os.Args
 	apiKey := os.Getenv("RESEND_API_KEY")
