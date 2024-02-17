@@ -43,11 +43,11 @@ func main() {
 	}
 
 	params := &resend.SendEmailRequest{
-		To:          []string{"younggianniguy@gmail.com", "whitepapergianni@kindle.com"},
-		From:        "kindle@mancys-metal.xyz",
-		Text:        "This is a book!",
-		Html:        "<strong>email with attachments !!</strong>",
-		Subject:     "Automate the Boring Stuff with Python!",
+		To:          []string{configa.Config.DefaultReciever},
+		From:        configa.Config.DefaultSender,
+		Text:        "Book Drop!",
+		Html:        "<strong>Books attached to the email Boss !!</strong>",
+		Subject:     "Book Drop Incoming!",
 		Attachments: []*resend.Attachment{BookAttachment},
 	}
 

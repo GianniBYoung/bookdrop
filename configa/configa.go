@@ -1,7 +1,6 @@
 package configa
 
 import (
-	"errors"
 	"os"
 
 	"github.com/charmbracelet/huh"
@@ -24,22 +23,8 @@ func SurveyUser() {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewConfirm().Title("Enable debug mode?").Value(&Config.DebugMode),
-			huh.NewInput().Title("Who is the sender?").Value(&Config.DefaultSender).
-				Validate(func(str string) error {
-					// match regex for email
-					if str == "Frank" {
-						return errors.New("Sorry, we don’t serve customers named Frank.")
-					}
-					return nil
-				}),
-			huh.NewInput().Title("What is the device's email?").Value(&Config.DefaultReciever).
-				Validate(func(str string) error {
-					// match regex for email
-					if str == "Frank" {
-						return errors.New("Sorry, we don’t serve customers named Frank.")
-					}
-					return nil
-				}),
+			huh.NewInput().Title("Who is the sender?").Value(&Config.DefaultSender),
+			huh.NewInput().Title("What is the device's email?").Value(&Config.DefaultReciever),
 		),
 	)
 	form.Run()
