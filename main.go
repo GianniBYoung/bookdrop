@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"bookdrop/configa"
 
@@ -34,12 +36,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	fileName := filepath.Base(args[1])
+	fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
+
 	client := resend.NewClient(configa.Config.ApiKey)
 
 	// Create attachments objects
 	BookAttachment := &resend.Attachment{
 		Content:  f,
-		Filename: "a.epub",
+		Filename: fileName,
 	}
 
 	params := &resend.SendEmailRequest{
