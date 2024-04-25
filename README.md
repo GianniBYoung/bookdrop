@@ -1,5 +1,5 @@
-# bookdrop
-**Send local document to kindle using Charm Pop!** note currently using the base resend library but will offer the charm option soon
+# Bookdrop
+**Send local document to kindle using resend!**
 
 # Pre-Reqs
 This program uses Resend to email documents to a kindle (or other e-reader) of your choice.
