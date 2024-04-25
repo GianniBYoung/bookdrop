@@ -13,12 +13,18 @@ import (
 )
 
 func main() {
-
-	configa.Configure()
+	log.SetReportTimestamp(false)
+	log.SetReportCaller(false)
 	if os.Getenv("BOOKDROP_DEBUG") != "" {
 		log.SetLevel(log.DebugLevel)
 		log.Debug("Debug Enabled!")
 	}
+
+	if len(os.Args) < 2 {
+		log.Fatal("No Books Attached! Please Provide a Path!")
+	}
+
+	configa.Configure()
 
 	ctx := context.TODO()
 	args := os.Args

@@ -84,9 +84,6 @@ func readConfig() {
 }
 
 func Configure() {
-	log.SetReportTimestamp(false)
-	log.SetReportCaller(false)
-
 	getConfigPath()
 
 	envApiKey = os.Getenv("RESEND_API_KEY")
