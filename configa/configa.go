@@ -3,6 +3,7 @@ package configa
 import (
 	"os"
 
+	"github.com/adrg/xdg"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/log"
 	"gopkg.in/yaml.v3"
@@ -28,23 +29,6 @@ func SurveyUser() {
 		),
 	)
 	form.Run()
-}
-
-func getConfigPath() {
-
-	configDirPath := os.Getenv("XDG_CONFIG_HOME")
-
-	if configDirPath == "" {
-		homeDir, _ := os.UserHomeDir()
-		configDirPath = homeDir + "/.config"
-		err := os.MkdirAll(homeDir+".config", 0755)
-		if err != nil {
-			log.Error("Unable to create config path", err, "Path Error:")
-		}
-	}
-
-	ConfigPath = configDirPath + "/bookdrop.yml"
-
 }
 
 // This function should always generate and overwrite a config.
@@ -84,7 +68,8 @@ func readConfig() {
 }
 
 func Configure() {
-	getConfigPath()
+	ConfigPath = xdg.ConfigHome + "/bookdrop.yml"
+	log.Debug(ConfigPath)
 
 	envApiKey = os.Getenv("RESEND_API_KEY")
 	Config.ApiKey = envApiKey
