@@ -15,7 +15,7 @@ import (
 func main() {
 	log.SetReportTimestamp(false)
 	log.SetReportCaller(false)
-	if os.Getenv("BOOKDROP_DEBUG") != "" {
+	if os.Getenv("BOOKDROP_DEBUG") != "true" {
 		log.SetLevel(log.DebugLevel)
 		log.Debug("Debug Enabled!")
 	}
@@ -33,10 +33,9 @@ func main() {
 
 	log.Debug(configa.Config.ApiKey)
 	if configa.Config.ApiKey == "" {
-		log.Fatal("Api Key is missing")
+		log.Fatal("Api Key is missing! Please set using the environmental variable `RESEND_API_KEY`")
 	}
 
-	// pwd, _ := os.Getwd()
 	f, err := os.ReadFile(args[1])
 	if err != nil {
 		log.Fatal(err)
