@@ -17,7 +17,6 @@ type Configuration struct {
 }
 
 var Config Configuration
-var ConfigPath string
 var envApiKey string
 
 func SurveyUser() {
@@ -32,17 +31,18 @@ func SurveyUser() {
 }
 
 // This function should always generate and overwrite a config.
-func generateConfig() error {
+func generateConfig(path string) error {
 	Config, err := yaml.Marshal(&Config)
 
 	if err != nil {
 		log.Error("", err, "YAML Marshal Err")
 	}
 
-	err = os.WriteFile(ConfigPath, Config, 0644)
+	err = os.WriteFile(path, Config, 0644)
+	log.Error(path)
 
 	if err != nil {
-		log.Fatal("", err, "Error Writing Config File to "+ConfigPath)
+		log.Error("", err, "Error Writing Config File to "+path)
 		return err
 	}
 
@@ -50,7 +50,14 @@ func generateConfig() error {
 }
 
 func readConfig() {
-	f, err := os.ReadFile(ConfigPath)
+
+	configPath, err := xdg.SearchConfigFile("bookdrop/config.yaml")
+	if err != nil {
+		log.Errorf("No config file found: %s", err)
+	}
+	log.Debugf("Config file was found at: %s", configPath)
+
+	f, err := os.ReadFile(configPath)
 
 	if err != nil {
 		log.Fatal("", err, "Error retrieving config from path")
@@ -63,20 +70,22 @@ func readConfig() {
 	if envApiKey != "" {
 		Config.ApiKey = envApiKey
 	}
-
-	log.Debug("%+v\n", Config)
 }
 
 func Configure() {
-	ConfigPath = xdg.ConfigHome + "/bookdrop.yml"
-	log.Debug(ConfigPath)
+	configPath, err := xdg.ConfigFile("bookdrop/config.yaml")
+	log.Debug(configPath)
+
+	if err != nil {
+		log.Fatal("", err, "Error Getting Config File Path: "+configPath)
+	}
 
 	envApiKey = os.Getenv("RESEND_API_KEY")
 	Config.ApiKey = envApiKey
-	if _, err := os.Stat(ConfigPath); err != nil {
+	if _, err := os.Stat(configPath); err != nil {
 		log.Info("Config file not found, generating!")
 		SurveyUser()
-		e := generateConfig()
+		e := generateConfig(configPath)
 		if e != nil {
 			log.Error("", e, "config file error")
 		}
