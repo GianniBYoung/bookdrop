@@ -17,11 +17,11 @@ Run this command to download and install `bookdrop`
 If you do not have `go` installed on your system pre compiled binaries can soon be found in releases
 
 ## Configuration
-* On first run the wizard will guide you through the initial setup and save a yaml configuration in `~/.config/bookdrop.yml`
+* On first run the wizard will guide you through the initial setup and save a yaml configuration in `~/.config/bookdrop/config.yaml`
 * The api key can be specified in the following ways:
     * By setting the environmental variable `RESEND_API_KEY` (Preferred)
         * Can be set securely using the `pass program` - `export RESEND_API_KEY=$(pass RESEND_API_KEY)`
     * By setting the field `apiKey` in the yaml file (insecure)
 
 # Usage
-`bookdrop <path to file>`
+`bookdrop <path to book>`
