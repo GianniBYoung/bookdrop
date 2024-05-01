@@ -5,6 +5,7 @@ go 1.22
 toolchain go1.22.0
 
 require (
+	github.com/adrg/xdg v0.4.0
 	github.com/charmbracelet/huh v0.3.0
 	github.com/charmbracelet/log v0.4.0
 	github.com/resend/resend-go/v2 v2.6.0
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/adrg/xdg v0.4.0 // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/catppuccin/go v0.2.0 // indirect
