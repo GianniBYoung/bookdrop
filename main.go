@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"bookdrop/configa"
+	"bookdrop/internal/configa"
 	"os"
 
 	"github.com/charmbracelet/log"
